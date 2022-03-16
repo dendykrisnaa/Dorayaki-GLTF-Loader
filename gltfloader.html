@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Low Poly Scene</title> <!-- judul halaman -->
+</head>
+<body style="background-color: #F8C471">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" integrity="sha512-dLxUelApnYxpLt6K2iomGngnHO83iUvZytA3YjDUCjT0HDOHKXnVYdf3hU4JjM8uEhxf9nD1/ey98U3t2vZ0qQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.min.js" integrity="sha512-UvyokRh1Y5UESe/TZ6h+r5CvsOVzcX3CirAbCTBcLs5BxzIO8IhswbESIgvqwoAkxKszDB+JJTMSbVN6SKCN8Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.js" integrity="sha512-NLtnLBS9Q2w7GKK9rKxdtgL7rA7CAS85uC/0xd9im4J/yOL4F9ZVlv634NAM7run8hz3wI2GabaA6vv8vJtHiQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js" integrity="sha512-tjnAmVGiveGgWkDgt8h8oqmOl3cnmQkTNUIFK2BjMz0SliBCm9l0ecN1fHiOG2mATHSYm/miXNX6tE0/5uYKMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://unpkg.com/three@0.85.0/examples/js/Detector.js"></script>
+    <script src="https://unpkg.com/three@0.85.0/examples/js/libs/stats.min.js"></script>
+    <script src="https://unpkg.com/three@0.85.0/examples/js/controls/OrbitControls.js"></script>
+
+    <!-- <script src="https://unpkg.com/three@0.85.1/examples/js/loaders/GLTFLoader.js"></script>
+     -->
+     <!-- dont forget about reference-->
+     <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/loaders/GLTFLoader.js"></script>
+
+    <script>
+        //panjang dan lebar = panjang dan lebar jendela browser
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+
+        const scene = new THREE.Scene();
+
+        //atur fov-nya
+        const camera = new THREE.PerspectiveCamera(65, width / height, 1, 1000);
+        scene.add(camera);
+
+        //posisi kamera dari sumbu x, y, dan z
+        camera.position.x = 3;
+        camera.position.y = 1;
+        camera.position.z = 3;
+
+        //mendeklarasikan renderer
+        const renderer = new THREE.WebGLRenderer({alpha: true});
+        renderer.setSize(width,height);
+        document.body.appendChild(renderer.domElement);
+
+        //mendeklarasikan controls agar tampilan menjadi interaktif/draggable
+        controls = new THREE.OrbitControls(camera,renderer.domElement);
+
+        //1 lampu saja dengan tipe directional light + ambient light
+        const lampu1 = new THREE.DirectionalLight("#FFFFFF",1);
+        scene.add(lampu1);
+        lampu1.position.set (0,2,0);
+
+        //ambient light untuk mengimbangi lampu pertama
+        const lampu2 = new THREE.AmbientLight("#FFFFFF",0.5);
+        scene.add(lampu2);
+
+        //import dorayaki.gltf
+        var loader = new THREE.GLTFLoader();
+
+        loader.load('dorayaki.gltf', function (gltf) {
+            scene.add(gltf.scene);
+        })
+        
+        window.addEventListener('resize', function(){
+            renderer.setSize(width,height);
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+        })
+
+        //render tampilan
+        function update(){
+            requestAnimationFrame(update);
+            renderer.render(scene,camera);
+        }
+
+        update();
+
+
+    </script>
+</body>
+</html>
